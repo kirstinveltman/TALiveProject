@@ -129,7 +129,30 @@ if (!String.IsNullOrEmpty(searchString))
 
 ### Create New Index Page
 
-We added functionality for View Models
+We added functionality for View Models, so we needed a new Index page that would display the content. I added the page and then modified the HTML to display the content requested.
 
+[Index.cshtml](https://github.com/kirstinveltman/TALiveProject/blob/master/Index.cshtml)
 
+### Change Layout Page for New Menu Functions
+
+This was an old story that changed the layout for one of the menu items relating to Job Placement. The request was to have 2 categories "Student Dashboard" and "Job Placement Dashboard" and for each of those to have multiple linked items below it. I mapped all of the new links, then added styling for the categories (as each of the linked items had inherited styling).
+
+```
+<li>
+    <a href="#">Job Placement</a>
+    <ul class="sub-menu">
+        <li style="color:white; font-weight:900; font-size: 1em; text-shadow: 1px 1px #000000;">Student Dashboard</li>
+        <li>@Html.ActionLink("Create an Account", "Create", "JPStudents")</li>
+        <li>@Html.ActionLink("Applications", "Create", "JPApplications")</li>
+        <li>@Html.ActionLink("Offer", "Create", "JPHires")</li>
+        <li style="color:white; font-weight:900; font-size: 1em; text-shadow: 1px 1px #000000">Job Placement Dashboard</li>
+        <li>@Html.ActionLink("Students", "Index", "JPStudents")</li>
+        <li>@Html.ActionLink("Applications", "Index", "JPApplications")</li>
+        <li>@Html.ActionLink("Offer", "Index", "JPHires")</li>
+    </ul>
+</li>
+```
+![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/layout_result.png "Layout Result")
+
+### Save DateTime on User Creation
 
