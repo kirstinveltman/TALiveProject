@@ -153,6 +153,7 @@ This was an old story that changed the layout for one of the menu items relating
 </li>
 ```
 **Screenshot of the result**
+<br />
 ![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/layout_result.png "Layout Result")
 
 ### Save DateTime on User Creation
@@ -264,8 +265,8 @@ public static class EnumExtensions
 ```
 
 I then added the two new Enum files that are found in [this](https://www.codeproject.com/Articles/776908/Dealing-with-Enum-in-MVC) article:
-
-(https://github.com/kirstinveltman/TALiveProject/blob/master/enum_templates.png "Enum files")
+<br />
+![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/enum_templates.png "Enum files")
 
 Finally, I modified the Controller to pass the GetDisplayName data because there was already functions to order the data that is displayed on the Index page:
 
@@ -279,8 +280,8 @@ case "companyState_desc":
 ```
 
 **The result:**
-
-(https://github.com/kirstinveltman/TALiveProject/blob/master/enum_result.png "City and State")
+<br />
+![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/enum_result.png "City and State")
 
 
 ## Conclusion
