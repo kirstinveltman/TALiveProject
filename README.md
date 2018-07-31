@@ -265,7 +265,7 @@ public static class EnumExtensions
 
 I then added the two new Enum files that are found in [this](https://www.codeproject.com/Articles/776908/Dealing-with-Enum-in-MVC) article:
 
-![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/enum_templates.png "Enum files")
+(https://github.com/kirstinveltman/TALiveProject/blob/master/enum_templates.png "Enum files")
 
 Finally, I modified the Controller to pass the GetDisplayName data because there was already functions to order the data that is displayed on the Index page:
 
@@ -279,10 +279,13 @@ case "companyState_desc":
 ```
 
 **The result:**
-![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/enum_result.png "City and State")
+
+(https://github.com/kirstinveltman/TALiveProject/blob/master/enum_result.png "City and State")
 
 
+## Conclusion
 
+I gained a lot of knowledge from working on this project about how MVC, Entity Framework, and Razor works, as well as expanded my knowledge of C#, LINQ, and Lambda Expressions, and grew a lot of confidence in myself that I can figure out tasks by research, cobbling stuff together, and experimenting. Especially that persistance will pay off in the end.
 
 
 
