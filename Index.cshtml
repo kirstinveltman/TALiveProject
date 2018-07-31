@@ -1,0 +1,90 @@
+@model IEnumerable<JPDash.ViewModels.JPStudentRundown>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>&nbsp;&nbsp;Weekly Applications</h3>
+<p><br /> <br /><br /></p>
+
+
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name or location: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.jpstudent.JPName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.jpstudent.JPStudentLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.jpstudent.JPStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.jpstudent.JPLinkedIn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.jpstudent.JPPortfolio)
+        </th>
+        <th>
+            Total Applications
+        </th>
+        <th>
+            Total Applications This Week
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.jpstudent.JPName)
+            </td>
+            <td>
+                @functions {
+                    public string returnWithSpaces(string location)
+                    {
+                        string newString = System.Text.RegularExpressions.Regex.Replace(location, "[A-Z]", " $0");
+                        newString = newString.Trim();
+                        return newString;
+                    }
+                }
+                @{
+                    var testString = item.JPStudentLocation.ToString();
+                    var newString = returnWithSpaces(testString);
+                }
+                @Html.DisplayFor(modelItem => newString)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.jpstudent.JPStartDate)
+            </td>
+            <td>
+                <a href="http://@Html.ExternalLink(item.jpstudent.JPLinkedIn)" target="_blank">LinkedIn Profile</a>
+            </td>
+            <td>
+                <a href="http://@Html.ExternalLink(item.jpstudent.JPPortfolio)" target="_blank">Student Portfolio</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalApplications)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalApplicationsThisWeek)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+</table>
