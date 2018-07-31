@@ -152,7 +152,137 @@ This was an old story that changed the layout for one of the menu items relating
     </ul>
 </li>
 ```
+**Screenshot of the result**
 ![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/layout_result.png "Layout Result")
 
 ### Save DateTime on User Creation
+
+The Job Placement Director wanted to know the DateTime that each application was created, so I modified the Controller to save that data on creation.
+
+```
+if (ModelState.IsValid)
+{
+    jPHire.JPHireId = Guid.NewGuid();
+    jPHire.JPHireDate = DateTime.Now;
+    db.JPHires.Add(jPHire);
+    db.SaveChanges();
+    return RedirectToAction("Index");
+}
+```
+
+### Export Data on Demand to CSV
+
+The Job Placement Director wanted to be able to export a list of student emails on demand from a button on the web page. This needed to be a CSV file. I researched the best way to do this and found that it was better to have the file created by a stream of the data instead of saving a file locally and then accessing it. I created a method in the Controller that would return a file with each of the student's emails.
+
+```
+public ActionResult Result()
+{
+    var emails = db.JPStudents.Select(x => x.JPEmail).ToList();
+    string csv = string.Empty;
+    foreach (var email in emails)
+    {
+        csv += email;
+        csv += "\r\n";
+    }
+
+    return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "StudentEmails.csv");
+}
+```
+
+Then I created the button for the cshtml page that would call that Controller method.
+
+```
+<div style="margin-left: 50px">
+    @Html.ActionLink("Export Student Email Addresses", "Result", null, new { @class = "btn btn-primary" })
+</div>
+```
+
+### Display Number of Total Applications and Applications This Week
+
+The story requested to display the total number of applications that a student had entered total, and then also how many they had done in the last week. As this was two separate database calls, I needed to do a join of the two in the Controller, then pass it to the View Model for this page, and then display it to the Index page. One of the issues I ran into was that Lambda expressions don't like DateTime, so I created a variable for calculating DateTime for within with last week and used it in the Lambda expression.
+
+**Controller:**
+
+```
+public ViewResult Index()
+{
+    List<JPStudentRundown> jPStudentRundownList = new List<JPStudentRundown>();
+
+    foreach (var student in db.JPStudents)
+    {
+        var applicationCount = db.JPApplications.Where(a => a.JPStudentId == student.JPStudentId).Count();
+        var dateCriteria = DateTime.Now.AddDays(-7);
+        var thisWeek = db.JPApplications.Where(a => a.JPStudentId == student.JPStudentId && a.JPApplicationDate >= dateCriteria ).Count();
+        var jPStudent = new JPStudentRundown(student, applicationCount);
+        jPStudentRundownList.Add(jPStudent);
+    }
+
+    return View(jPStudentRundownList);
+}
+```
+
+**Index page:**
+
+```
+<th>
+    Total Applications
+    @*@Html.DisplayNameFor(model => model.totalApplications)*@
+</th>
+<th>
+    Total Applications This Week
+    @*@Html.DisplayNameFor(model => model.totalApplicationsThisWeek)*@
+</th>
+```
+
+### Join Two Database Tables When Displaying on the Index Page
+
+The City and State for each company application entered into the database were saved into separate columns. The request was for these to be displayed together, and for the states to display as their two letter initial. There was an additional request to include Canadian Provinces and Territories.
+
+I first added Display Names for all US States and Canadian Provinces and Territories in the Enum that held this data.
+
+```
+[Display(Name = "AL")]
+Alabama,
+```
+
+I then researched how to display an Enum display's name. I found code and logic from other sources, but ended up having to test and modify things in order to implement a solution that would work in our application.
+
+I found code from the solution [here](https://stackoverflow.com/questions/13099834/how-to-get-the-display-name-attribute-of-an-enum-member-via-mvc-razor-code?rq=1) that would get the Display Name from the Enum.
+
+```
+public static class EnumExtensions
+{
+    public static string GetDisplayName(this Enum enumValue)
+    {
+        return enumValue.GetType()
+               .GetMember(enumValue.ToString())
+               .First()
+               .GetCustomAttribute<DisplayAttribute>()
+               .GetName();
+    }
+}
+```
+
+I then added the two new Enum files that are found in [this](https://www.codeproject.com/Articles/776908/Dealing-with-Enum-in-MVC) article:
+
+![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/enum_templates.png "Enum files")
+
+Finally, I modified the Controller to pass the GetDisplayName data because there was already functions to order the data that is displayed on the Index page:
+
+```
+case "CompanyState":
+    hires = hires.OrderBy(s => s.JPCompanyState.GetDisplayName());
+    break;
+case "companyState_desc":
+    hires = hires.OrderByDescending(s => s.JPCompanyState.GetDisplayName());
+    break;
+```
+
+**The result:**
+![alt text](https://github.com/kirstinveltman/TALiveProject/blob/master/enum_result.png "City and State")
+
+
+
+
+
 
